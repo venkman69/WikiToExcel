@@ -26,8 +26,7 @@ wikitoexcel can capture:
 - Sheet name is captured as caption of the wiki table
 - Multiline cell contents are styled with 'wrap' in excel
 - span and div elements are converted to their inner text representation
-- HyperLinks are addressed in a way that the hyperlink and display text are presented side by side. This facilitates round-trip between exceltowiki and wikitoexcel. 
-Such as:
+- HyperLinks are addressed in a way that the hyperlink and display text are presented side by side. This facilitates round-trip between exceltowiki and wikitoexcel. Such as:
   http://yahoo.com Yahoo!
 
 wikitoexcel currently cannot capture anything more complex than the above list. 
