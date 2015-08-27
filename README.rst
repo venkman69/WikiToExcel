@@ -30,7 +30,7 @@ wikitoexcel can capture:
   http://yahoo.com Yahoo!
 
 wikitoexcel currently cannot capture anything more complex than the above list. 
-Features such as a font styling that within a paragraph is not honoured.
+Features such as a font styling within a paragraph is not captured.
 
 Notes
 -----
