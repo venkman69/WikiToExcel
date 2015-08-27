@@ -42,8 +42,8 @@ If implementing this as a web.py call:
 
 .. code-block:: python
 
-    class wikitoexcel()\:
-		def POST(self)\:
+    class wikitoexcel():
+		def POST(self):
 			formdata=web.input()
 			w2e=wikiToExcel(wikiContent= formdata['wikitoexcel'])
 			sbuf= StringIO.StringIO()
