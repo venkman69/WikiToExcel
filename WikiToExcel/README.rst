@@ -34,6 +34,23 @@ Such as:
 wikitoexcel currently cannot capture anything more complex than the above list. 
 Features such as a font styling that within a paragraph is not honoured.
 
+Notes
+-----
+If implementing this as a web.py call: 
+
+- You can construct a simple HTML form post with a textarea (below assumes textarea name is 'wikitoexcel')
+- Add the following class
+
+    class wikitoexcel():
+        def POST(self):
+            formdata=web.input()
+            w2e=wikiToExcel(wikiContent= formdata['wikitoexcel'])
+            sbuf= StringIO.StringIO()
+            w2e.saveExcel(fileObj=sbuf)
+            web.header('Content-type','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            return sbuf.getvalue()
+
+
 Release Notes: 0.1.0
 --------------------
 Initial Release
