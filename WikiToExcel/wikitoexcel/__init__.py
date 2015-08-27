@@ -182,11 +182,14 @@ def tdToExcel(ws,td,colCount, rowCount, trStyle, tblStyle):
             tdcontents +=procMap[child.name.lower()](child)
         else:
             print "not found",child.name.lower()
-    
+    tdcontents = tdcontents.strip()
     cell.value=tdcontents
     # if line contains multiple lines, then set the wrap style on
-    if "\n" in tdcontents:
+    # this means return character exists between texts
+    print "[%s]"%tdcontents, re.search(r"\w+\r\w+", tdcontents)
+    if re.search(r".+\n.+", tdcontents):
         cell.alignment = Alignment(wrapText=True)
+        print "Wrap:",cell.coordinate
 
     if td.has_attr('colspan'):
         colspan+=int(td['colspan']) -1
@@ -225,7 +228,7 @@ def htmlToExcel(htmlContent):
             rowCount+=1
     return wb
 
-class wikitoexcel():
+class wikiToExcel():
     wb=None
     htmlContent=None
     def __init__(self,wikiContent=None,infile=None, ):
@@ -272,13 +275,3 @@ class wikitoexcel():
                     raise Exception("Could not save excel to: %s"%fileName)
                 
                 
-            
-
-if __name__ == '__main__':
-    f=open("./example/wikitbl.txt","r")
-    wikiObj= wikitoexcel(f.read())
-    print wikiObj.getHTML()
-    print "**********"
-    wikiObj.saveExcel("out.xlsx")
-
-    
