@@ -6,7 +6,7 @@ Created on Jul 28, 2015
 from setuptools import setup
 
 setup(name='wikitoexcel',
-      version='0.1.0',
+      version='0.1.1',
       description='Convert Wiki to Excel while maintaining formatting',
       url='http://github.com/venkman69/WikiToExcel',
       author='Narayan Natarajan',
