@@ -40,7 +40,8 @@ If implementing this as a web.py call:
 - You can construct a simple HTML form post with a textarea (below assumes textarea name is 'wikitoexcel')
 - Add the following class
 
-::
+.. code-block:: python
+
     class wikitoexcel()\:
 		def POST(self)\:
 			formdata=web.input()
