@@ -42,14 +42,14 @@ If implementing this as a web.py call:
 - Add the following class
 
 
-    class wikitoexcel():
-        def POST(self):
-            formdata=web.input()
-            w2e=wikiToExcel(wikiContent= formdata['wikitoexcel'])
-            sbuf= StringIO.StringIO()
-            w2e.saveExcel(fileObj=sbuf)
-            web.header('Content-type','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            return sbuf.getvalue()
+	class wikitoexcel():
+		def POST(self):
+			formdata=web.input()
+			w2e=wikiToExcel(wikiContent= formdata['wikitoexcel'])
+			sbuf= StringIO.StringIO()
+			w2e.saveExcel(fileObj=sbuf)
+			web.header('Content-type','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+			return sbuf.getvalue()
 
 
 Release Notes: 0.1.0
