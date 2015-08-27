@@ -4,8 +4,8 @@ WikiToExcel
 
 Use is trivial as shown below::
 
-    from wikitoexcel import wikitoexcel
-    w2e = wikitoexcel(infile="./wikitbl.txt")
+    from wikitoexcel import wikiToExcel
+    w2e = wikiToExcel(infile="./wikitbl.txt")
     # print the html representation of wiki markup
     print w2e.getHTML()
     # save excel file to out.xlsx
@@ -13,7 +13,7 @@ Use is trivial as shown below::
 
 Options are::
 
-    wikitoexcel(wikiContent=<wikistr>, infile=<wikiTextFile>)
+    wikiToExcel(wikiContent=<wikistr>, infile=<wikiTextFile>)
 
 Features
 --------
@@ -26,8 +26,7 @@ wikitoexcel can capture:
 - Sheet name is captured as caption of the wiki table
 - Multiline cell contents are styled with 'wrap' in excel
 - span and div elements are converted to their inner text representation
-- HyperLinks are addressed in a way that the hyperlink and display text are 
-presented side by side. This facilitates round-trip between exceltowiki and wikitoexcel. 
+- HyperLinks are addressed in a way that the hyperlink and display text are presented side by side. This facilitates round-trip between exceltowiki and wikitoexcel. 
 Such as:
   http://yahoo.com Yahoo!
 
@@ -42,8 +41,8 @@ If implementing this as a web.py call:
 - Add the following class
 
 
-	class wikitoexcel():
-		def POST(self):
+    class wikitoexcel()\:
+		def POST(self)\:
 			formdata=web.input()
 			w2e=wikiToExcel(wikiContent= formdata['wikitoexcel'])
 			sbuf= StringIO.StringIO()
