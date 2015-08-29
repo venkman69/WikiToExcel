@@ -50,7 +50,10 @@ If implementing this as a web.py call:
 			web.header('Content-type','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 			return sbuf.getvalue()
 
+Release Notes: 0.1.2
+--------------------
+Packaging was not following best practice of examples within the package.
 
-Release Notes: 0.1.0
+Release Notes: 0.1.1
 --------------------
 Initial Release

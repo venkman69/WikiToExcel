@@ -1,2 +1,2 @@
 include README.rst
-include example/*txt
+include wikitoexcel/example/*txt
