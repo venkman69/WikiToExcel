@@ -12,7 +12,7 @@ setup(name='wikitoexcel',
       author='Narayan Natarajan',
       author_email='venkman69@yahoo.com',
       license='MIT',
-      packages=['wikitoexcel','wikitoexcel/example'],
+      packages=['wikitoexcel'],
       install_requires=[
           'openpyxl',
           'beautifulsoup4'
