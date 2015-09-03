@@ -5,7 +5,7 @@ Created on Aug 26, 2015
 '''
 
 from wikitoexcel import wikiToExcel
-w2e = wikiToExcel(infile="./etradewiki.txt")
+w2e = wikiToExcel(infile="./wikitbl.txt")
 from StringIO import StringIO
 
 sbuf = StringIO()
