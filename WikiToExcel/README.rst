@@ -50,6 +50,12 @@ If implementing this as a web.py call:
 			web.header('Content-type','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 			return sbuf.getvalue()
 
+Release Notes: 0.1.3
+--------------------
+Added license file
+Rewrote parser to retain wikimarkup within cells. This allows an excel user to passthrough wiki markup.
+
+
 Release Notes: 0.1.2
 --------------------
 Packaging was not following best practice of examples within the package.

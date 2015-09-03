@@ -1,7 +1,21 @@
 '''
-Created on Aug 18, 2015
+Wiki To Excel converter
 
+@copyright: Narayan Natarajan <venkman69@yahoo.com>
 @author: venkman69
+@license:
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 from copy import deepcopy
 import re
@@ -15,9 +29,10 @@ from openpyxl.styles.fills import PatternFill
 from openpyxl.styles.fonts import Font
 from openpyxl.styles.alignment import Alignment
 from openpyxl.utils import coordinate_from_string
-from wikimarkup import parse
 from __builtin__ import file
 import os
+from wikitoexcel import wikitblparser
+from wikitoexcel.wikitblparser import wikiTableParser
 
 
 # import getpass
@@ -26,7 +41,7 @@ def getHTMLStyle(htmlNode):
 
 def captionToExcel(capNode):
     # this is worksheet name
-    return capNode.text.strip()
+    return capNode.strip()
 
 def procHTMLLists(htmlNode):        
     wikiStr=""
@@ -67,13 +82,8 @@ def procStyle(bsNode):
                 'background-color',
                 'width',
                 'color']
-    if not bsNode.has_attr('style'):
-        return None
     styleMap=dict((k,False) for k in procstyles)
-    for styleKV in  bsNode['style'].split(';'):
-        styleKVList=styleKV.split(":")
-        k=styleKVList[0].strip().lower()
-        v=styleKVList[1].strip().lower()
+    for k,v in  bsNode.attrs.iteritems():
         if k == "font-family":
             styleMap['font_name']=v
         if k == "font-weight":
@@ -137,18 +147,42 @@ def applyFmt(tblStyle, trStyle,tdStyle, cell,ws):
             
     cell.font=font        
 
-def trToExcel(ws,tr,rowCount,tblStyle):
-    trStyle = procStyle(tr)
-    colCount=1
-    tdthList=tr.findAll('td')
-    if len(tdthList)==0:
-        tdthList=tr.findAll('th')
+def trToExcel(ws,row,rowCount,tblStyle):
+    trStyle = procStyle(row)
+    offset=0
+    for colCount,cell in zip(range(len(row.cells)),row.cells):
+        rowspan,colspan, colMergeOffset=tdToExcel(ws,cell,colCount+offset,rowCount,trStyle,tblStyle)
+        offset+=colMergeOffset
 
-    for td in tdthList:
-        rowspan,colspan, colMergeOffset=tdToExcel(ws,td,colCount,rowCount,trStyle,tblStyle)
-        colCount+=1+colspan+colMergeOffset
+def parseHTMLElement(htmlElement,level=0):
+    procMap={'ol':procHTMLLists,
+             'ul':procHTMLLists,
+             'span':procSpanDiv,
+             'a':procHTMLLink,
+             'p':lambda x: x.text,
+             }
+    elemStr=""
+    for child in htmlElement.children:
+        if isinstance(child, bs4.element.NavigableString):
+            elemStr+=child
+            continue
+        if len([x for x in child.children])>=1:
+            elemStr+=parseHTMLElement(child, level+1)
+            continue
+            
+        if child.name == None or len(child.contents)==0:
+            if isinstance(child, bs4.element.NavigableString):
+                elemStr+=child
+            elif child.text != "":
+                elemStr+=child.text
+            continue
+        elif procMap.has_key(child.name.lower()):
+            elemStr +=procMap[child.name.lower()](child)
+        else:
+            print "not found",child.name.lower()
+    return elemStr
 
-def tdToExcel(ws,td,colCount, rowCount, trStyle, tblStyle): 
+def tdToExcel(ws,wikicell,colCount, rowCount, trStyle, tblStyle): 
     procMap={'ol':procHTMLLists,
              'ul':procHTMLLists,
              'span':procSpanDiv,
@@ -158,99 +192,75 @@ def tdToExcel(ws,td,colCount, rowCount, trStyle, tblStyle):
     colspan=0
     rowspan=0
     colMergeOffset=0
-    tdStyle = procStyle(td)
-    cell=ws.cell(column=colCount,row=rowCount)
+    tdStyle = procStyle(wikicell)
+    cell=ws.cell(column=colCount+1,row=rowCount+1)
     while cell.coordinate in ws.merged_cells:
         colMergeOffset+=1
-        cell=ws.cell(column=colCount+colMergeOffset,row=rowCount)
+        cell=ws.cell(column=colCount+colMergeOffset+1,row=rowCount+1)
 
-    tdcontents=""
-    for child in td.children:
-        if child.name == None or len(child.contents)==0:
-            if isinstance(child, bs4.element.NavigableString):
-                tdcontents+=child
-            elif child.text != "":
-                tdcontents+=child.text
-            continue
-        if len(child.contents)> 1 and child.name == "p":
-            for cc in child.children:
-                if cc.name == None:
-                    continue
-                if procMap.has_key(cc.name.lower()):
-                    tdcontents +=procMap[cc.name.lower()](cc)
-        elif procMap.has_key(child.name.lower()):
-            tdcontents +=procMap[child.name.lower()](child)
-        else:
-            print "not found",child.name.lower()
-    tdcontents = tdcontents.strip()
-    cell.value=tdcontents
+    cell.value=wikicell.text
     # if line contains multiple lines, then set the wrap style on
     # this means return character exists between texts
-    print "[%s]"%tdcontents, re.search(r"\w+\r\w+", tdcontents)
-    if re.search(r".+\n.+", tdcontents):
+    if re.search(r".+\n.+", wikicell.text):
         cell.alignment = Alignment(wrapText=True)
         print "Wrap:",cell.coordinate
 
-    if td.has_attr('colspan'):
-        colspan+=int(td['colspan']) -1
-    if td.has_attr('rowspan'):
-        rowspan=int(td['rowspan']) -1
+    if wikicell.attrs.has_key('colspan'):
+        colspan+=int(wikicell.attrs['colspan']) -1
+    if wikicell.attrs.has_key('rowspan'):
+        rowspan=int(wikicell.attrs['rowspan']) -1
     if colspan != 0 or rowspan != 0:
-        ws.merge_cells(start_row=rowCount,start_column=colCount,
-                       end_row=rowCount+rowspan, end_column=colCount+colspan)
+        ws.merge_cells(start_row=rowCount+1,start_column=colCount+1,
+                       end_row=rowCount+rowspan+1, end_column=colCount+colspan+1)
     
     applyFmt(tblStyle,trStyle,tdStyle,cell,ws)
-    
-    
     return rowspan, colspan, colMergeOffset
     
 
 
-def htmlToExcel(htmlContent):
-    cdom=BeautifulSoup(htmlContent)
+def wikiTblToExcel(wikiTblList):
     tblCount=0
     wb=Workbook()
-    for tbl in cdom.find_all("table"):
-        caption=tbl.find("caption")
-        tblCount+=1
-        if caption != None:
+    for tblInd,tbl in zip(range(len(wikiTblList)),wikiTblList):
+        caption=tbl.caption
+        if caption != None and caption != u"":
             shtName=captionToExcel(caption)
         else:
-            shtName = "Sheet"+str(tblCount)
+            shtName = "Sheet"+str(tblInd)
 
-        ws=wb.create_sheet(tblCount, shtName)
+        ws=wb.create_sheet(tblInd, shtName)
         # set the new sheet as active
         wb.active=wb.get_index(ws)
         tblStyle=procStyle(tbl)
-        rowCount=1
-        for tr in tbl.findAll("tr"):
-            trToExcel(ws,tr,rowCount,tblStyle)
-            rowCount+=1
+        for rowCount,row in zip(range(len(tbl.rows)),tbl.rows):
+            trToExcel(ws,row,rowCount,tblStyle)
     return wb
 
 class wikiToExcel():
     wb=None
-    htmlContent=None
+    wikiContent=None
     def __init__(self,wikiContent=None,infile=None, ):
         """wikiContent is a string containing the wiki text
         or infile can be a filepath or a file-like object """
 
         if wikiContent != None:
-            self.htmlContent= parse(wikiContent)
+            self.wikTblList= wikiTableParser(wikiContent)
+            self.wikiContent=wikiContent
         elif infile != None:
             if isinstance(infile, file):
-                self.htmlContent= parse(infile.read())
+                self.wikiContent= infile.read()
             elif os.path.exists(infile):
                 with open(infile,"r") as wikiFile:
-                    self.htmlContent= parse(wikiFile.read())
+                    self.wikiContent= wikiFile.read()
             else:
                 raise ValueError("Input file or path is required: %s"%infile)
         else:
             raise ValueError("Insufficient arguments")
-        self.wb= htmlToExcel(self.htmlContent)
+        self.wikiTblList= wikiTableParser(self.wikiContent)
+        self.wb = wikiTblToExcel(self.wikiTblList)
     
     def getHTML(self):
-        return self.htmlContent
+        return self.wikiContent
 
     def getWorkBook(self):
         return self.wb
