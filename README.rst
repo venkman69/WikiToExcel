@@ -49,6 +49,11 @@ If implementing this as a web.py call:
 			w2e.saveExcel(fileObj=sbuf)
 			web.header('Content-type','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 			return sbuf.getvalue()
+
+Release Notes: 0.1.5
+--------------------
+
+Clean up of setup.py and minor changes
 			
 Release Notes: 0.1.4
 --------------------
