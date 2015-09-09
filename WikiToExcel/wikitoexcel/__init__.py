@@ -4,24 +4,31 @@ Wiki To Excel converter
 @copyright: Narayan Natarajan <venkman69@yahoo.com>
 @author: venkman69
 @license:
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+The MIT License (MIT)
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+Copyright (c) <year> <copyright holders>
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 '''
 from copy import deepcopy
 import re
 
-import bs4
-from bs4 import BeautifulSoup
 from openpyxl import Workbook
 from openpyxl.styles import fills
 from openpyxl.styles.colors import Color
@@ -31,9 +38,9 @@ from openpyxl.styles.alignment import Alignment
 from openpyxl.utils import coordinate_from_string
 from __builtin__ import file
 import os
-from wikitoexcel import wikitblparser
 from wikitoexcel.wikitblparser import wikiTableParser
 
+HTML_BR=re.compile(r"<br[ ]*[/]>", re.IGNORECASE)
 
 # import getpass
 def getHTMLStyle(htmlNode):
@@ -42,27 +49,6 @@ def getHTMLStyle(htmlNode):
 def captionToExcel(capNode):
     # this is worksheet name
     return capNode.strip()
-
-def procHTMLLists(htmlNode):        
-    wikiStr=""
-    prefix=""
-    if htmlNode.name.lower() == "ul":
-        prefix="*"
-    if htmlNode.name.lower() == "ol":
-        prefix="#"
-    for cNode in htmlNode.children:
-        wikiStr+= prefix + cNode.text
-    return wikiStr
-
-def procHTMLLink(htmlNode):
-    wikiStr=""
-    url=htmlNode['href']
-    displayText= htmlNode.text
-    wikiStr+=url + " " + displayText
-    return wikiStr
-
-def procSpanDiv(htmlNode):
-    return htmlNode.text
 
 def procStyle(bsNode):        
     """proc style only retrieves the following style items:
@@ -154,41 +140,7 @@ def trToExcel(ws,row,rowCount,tblStyle):
         rowspan,colspan, colMergeOffset=tdToExcel(ws,cell,colCount+offset,rowCount,trStyle,tblStyle)
         offset+=colMergeOffset
 
-def parseHTMLElement(htmlElement,level=0):
-    procMap={'ol':procHTMLLists,
-             'ul':procHTMLLists,
-             'span':procSpanDiv,
-             'a':procHTMLLink,
-             'p':lambda x: x.text,
-             }
-    elemStr=""
-    for child in htmlElement.children:
-        if isinstance(child, bs4.element.NavigableString):
-            elemStr+=child
-            continue
-        if len([x for x in child.children])>=1:
-            elemStr+=parseHTMLElement(child, level+1)
-            continue
-            
-        if child.name == None or len(child.contents)==0:
-            if isinstance(child, bs4.element.NavigableString):
-                elemStr+=child
-            elif child.text != "":
-                elemStr+=child.text
-            continue
-        elif procMap.has_key(child.name.lower()):
-            elemStr +=procMap[child.name.lower()](child)
-        else:
-            print "not found",child.name.lower()
-    return elemStr
-
 def tdToExcel(ws,wikicell,colCount, rowCount, trStyle, tblStyle): 
-    procMap={'ol':procHTMLLists,
-             'ul':procHTMLLists,
-             'span':procSpanDiv,
-             'a':procHTMLLink,
-             'p':lambda x: x.text,
-             }
     colspan=0
     rowspan=0
     colMergeOffset=0
@@ -199,6 +151,8 @@ def tdToExcel(ws,wikicell,colCount, rowCount, trStyle, tblStyle):
         cell=ws.cell(column=colCount+colMergeOffset+1,row=rowCount+1)
 
     cell.value=wikicell.text
+    #replace <br/> with return characters
+    cell.value=HTML_BR.sub("\n",cell.value)
     # if line contains multiple lines, then set the wrap style on
     # this means return character exists between texts
     if re.search(r".+\n.+", wikicell.text):

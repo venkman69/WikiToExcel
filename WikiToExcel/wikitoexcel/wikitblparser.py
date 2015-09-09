@@ -4,9 +4,6 @@
 '''
 from bs4 import BeautifulSoup
 import re
-_tabletags = ( # Can only appear inside table
-    u'td', u'th', u'tr',
-)
 
 
 class _tbl(object):
@@ -77,7 +74,7 @@ def wikiAttrParse(wikiText,elementType):
     tmpHTML="<%s %s>"%(elementType,wikiText)
     elem = BeautifulSoup(tmpHTML,"html.parser")
     styleAttrs= elem.find(elementType).attrs
-    if styleAttrs.has_key("style"):
+    if styleAttrs.has_key("style") and styleAttrs["style"]!=u"":
         #separate this out
         sSplit=styleAttrs['style'].split(";")
         for k in sSplit:
