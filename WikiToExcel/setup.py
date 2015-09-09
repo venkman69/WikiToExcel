@@ -29,6 +29,7 @@ setup(name='wikitoexcel',
       author_email='venkman69@yahoo.com',
       license='MIT',
       packages=['wikitoexcel'],
+	  py_modules=['version'],
       install_requires=[
           'openpyxl',
           'beautifulsoup4'
