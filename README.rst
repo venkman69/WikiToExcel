@@ -49,6 +49,13 @@ If implementing this as a web.py call:
 			w2e.saveExcel(fileObj=sbuf)
 			web.header('Content-type','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 			return sbuf.getvalue()
+			
+Release Notes: 0.1.4
+--------------------
+
+* Added option to output in inline format using double pipe separator notation vs line by line format.
+* Set the package level variable: wikitoexcel.INLINE_FMT=True (default)
+* To allow multiline text, a BR tag is replaced for each return character
 
 Release Notes: 0.1.3
 --------------------
