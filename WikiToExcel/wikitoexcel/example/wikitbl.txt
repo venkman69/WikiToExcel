@@ -1,71 +1,66 @@
-{| border=1  style="border-collapse: collapse; border-color: #aaaaaa" 
-|+style="font-weight:bold;color:blue;background-color:yellow" |  Sheet1
-|- style="background-color:#e5b8b7;font-family:Calibri;font-weight:bold" 
-| style="width:2.09700520833in" |
-Name
-| style="width:1.9443359375in" |
-ID
-| style="width:2.05533854167in" |
-Notes
-|
-Count
-| style="width:2.0in" |
-Description
-|- style="font-family:Calibri" 
-| style="font-weight:bold" |
-Test Bold
-| style="text-decoration:underline" |
-Test underline
-| style="text-decoration:line-through" |
-test strikethrough
-| style="font-style:italic" |
-Test italics
-|
-row width 2"
-|- style="font-family:Calibri" 
-| style="color:#c0504d" |
-Test theme color
-|
-|
-|
-|
+{| class="wikitable" border="1"
 |-
-| style="background-color:#f2dbdb;color:#974806;font-family:Calibri" |
-Test bgd and fg color (theme)
-|colspan=3 style="background-color:#4f80bd;color:#ffffff;font-family:Calibri" |
-merged cell 3 cols
-|
-|- style="font-family:Calibri" 
-|
-|
-test1
-|rowspan=3 style="background-color:#FFFF00" |
-merged cell 3 rows
-|
-|
+! Project !! PTS || Links || PTS Stage || PTS Status || SecArch Dev Status || Dev Resources || Notes || Last Updated
 |-
-|colspan=2 rowspan=2 style="background-color:#46528F;color:#ffffff;font-family:Calibri" |
-merged cell 2x2
-| style="font-family:Calibri" |
-xyz
-|
+| UAA Session and Login Enhancements || [https://PTS.CORP.ETRADEGRP.COM/?entityid={7707145D-4CC9-4BEB-A634-BB11E947297E}&qlink=PRJ 41045] || [https://wiki.corp.etradegrp.com/index.php/UAA_Session_and_Login_Enhancements Wiki] || Develop & Test|| <span style="color:FireBrick">Red</span>(?) || <span style="color:green">Green</span>
+ || Justin || 
+* Issue with ETPro CAP PRD instances.
+** Pro QA testing a version that uses https://etpro.etrade.com/login, will be complete Tuesday, 10/20.
+** Underlying issue still under investigation
+*** Apache upgrade that my solve the issue rolling 11/19 (CR 183647)
+|| 10/20/2015
 |-
-|
-|
-|- style="font-family:Calibri" 
-| style="color:#0000ff;text-decoration:underline" |
-[http://yahoo.com Yahoo!]
-|
-|
-test
-|
-|
-|- style="font-family:Calibri" 
-|
-* test1
-* test2
-|
-|
-|
-|
+| Fast Identity Online (FIDO) on Mobile || [https://PTS.CORP.ETRADEGRP.COM/?entityid={B8935EBC-57C5-4C9F-9B05-6220D9708A40}&qlink=PRJ 41222] || || Design || <span style="color:green">Green</span> || <span style="color:FireBrick">Red</span> || Ashish & Justin || 
+Integrated the tutorial proxy with our SMagent and tested the endpoints with the rest client. SM session is being sent with the response now.  
+|| 10/20/2015
+|-
+| Customer Login Enhancements (CLE Ph1) || [https://pts.corp.etradegrp.com/?entityid={3344CDF7-870E-4E48-A8DA-A7D2E4CD2C1C}&qlink=PRJ 40958] || 
+* [https://wiki.corp.etradegrp.com/index.php/CLE Wiki] 
+* [https://wiki.corp.etradegrp.com/index.php/Customer_Login_Enhancements#Rollout_Strategy release schedule]
+ || Develop & Test  || <span style="color:FireBrick">Red</span> || <span style="color:green">Green</span> || Justin || 
+* Bank IVR "Plan B" to roll 10/20, CR 184276
+* Error messages to go in as-is 11/19
+** Erroneous error messages to be cleaned up, rolled in Jan.
+* Justin working on CAP "dashboard"
+|| 10/20/2015
+|-
+| Customer Login Enhancements (CLE Ph2) || [https://PTS.CORP.ETRADEGRP.COM/?entityid={7E5547E9-97C3-4FC5-A88C-7698006561FD}&qlink=PRJ 41295] || [https://confluence.corp.etradegrp.com/pages/viewpage.action?pageId=1542364 Confluence] || Analysis || <span style="color:FireBrick">Red</span> (lack of QA resources) || <span style="color:gold">Yellow</span> || Justin || 
+* Development started
+** Working on "Password Strength Meter" first (low hanging fruit)
+* Met with TradeWeb and current state of TradeWeb pages was in question. 
+** E*TRADE/TradeWeb need to investigate and have follow up meeting.
+|| 10/20/2015
+|-
+| RightNow - Eventus Live Chat Implementation || 41273 || || Analysis || <span style="color:green">Green</span>|| <span style="color:green">Green</span> || Andy || Meeting 8/20 to design connections to agent and web client. Working connections, may need to add additional parameter to Assertion Consumer Service Endpoint for VDI.  Connection created and waiting for eventus.  Testing connections with eventus 9/28.  Successful test for web agent but need a federator.  Working on secondary connections.  Targeting SIT for 11/2. Implemented console connection, need vdi location to test third and last connection. || 11/3/2015
+|-
+| Siteminder Upgrade || [https://PTS.CORP.ETRADEGRP.COM/?entityid={FF139298-6565-4FSE-A5D5-9D96005D7015}&qlink=PRJ 41634] || || Plan || <span style="color:green">Green</span> || <span style="color:green">Green</span> || Kannan, Narayan || * SMTools12 Development (90% Done)<br> * DIT Policy Server setup done<br>  * DIT Serena Instance setup (Going on): 10/26-11/13<br> * Schedule finalized, SIT on 11/16, UAT on 11/20<br> * <span style="color:#800000">Project may be delayed due to non-availability of SysEng resource</span><br> * [https://wiki.corp.etradegrp.com/index.php/Siteminder_Upgrade_2015 Project Wiki]|| 11/10/2015
+|-
+| Amazon Cloud POC || [https://PTS.CORP.ETRADEGRP.COM/?entityid={FF139298-6565-4FSE-A5D5-9D96005D7015}&qlink=PRJ 41603] || || Plan || <span style="color:green">Green</span> || <span style="color:green">Green</span> || Ashish ||Status is same as last week .CLI piece is done and working on Cloudnexa piece.   || 10/20/2015
+|-
+| MOD Error Template || ????? || || Develop & Test|| <span style="color:green">Green</span>|| <span style="color:green">Green</span>|| Andy || Working on proof of concept.  Looking to add auto redirect (js) to templates.  Waiting for Tom's feedback. Another case in Italy (looking at logs).  Back burner for other SAML tasks. || 11/3/2015
+|-
+| Google Open ID POC || ????? || || Design|| <span style="color:green">Green</span> || <span style="color:green">Green</span> || Andy || Plan submitted, firewall config complete. Back burner for other SAML tasks. [POC: ?] || 11/3/2015
+|-
+| MOD News New URL || 41444 || || Develop & Test|| <span style="color:green">Green</span> || <span style="color:green">Green</span> || Andy || Working on connection.  Coordinating with Simon and MOD to identify the problem.  Met with Simon and Wen 8/25, we believe MOD is pointing to UAT PingFed. Fixed but new request to add second connection to support two sites. Back burner for other SAML tasks.  SIT target 12/20 || 11/3/2015
+|-
+| Morning Star AWS || 41420 || || Develop & Test|| <span style="color:green">Green</span> || <span style="color:green">Green</span> || Ashish || FRD meetings on-going. Trying to get priority and new SIT date from project but current 12/15 || 10/27/2015
+|-
+| TSP - Trading || 41220 || || SDLC-Agile || <span style="color:gold">Yellow</span> || <span style="color:FireBrick">Red</span> || Justin 
+|| 
+* Delayed due to CLE-1
+|| 10/20/2015
+|-
+| Oracle Knowledge Base || ????? || || Develop & Test|| <span style="color:green">Green</span> || <span style="color:green">Green</span> || Andy || Looking for connections immediately, prioritizing this first aiming to have something by 10/30. Official SIT date 11/13. Waiting on federator 11/6 is target date now. || 11/3/2015
+|-
+| Billpay Fiserv || ????? || || Develop & Test|| <span style="color:green">Green</span> || <span style="color:green">Green</span> || Andy || Holding until next year. || 11/3/2015
+|-
+| CLE2 || 41295 || || Develop & Test|| <span style="color:green">Green</span> || <span style="color:green">Green</span> || Andy || Add an attribute to max 5 connections. Added and tested first connection.  No other connections planned.  || 11/3/2015
+|-
+| Remedy Force SIT site || 41431 || || Develop & Test|| <span style="color:green">Green</span> || <span style="color:green">Green</span> || Andy || Moved site from PROD to sit but connections do not work.  || 11/3/2015
+|-
+| Italian User Ping Error || ? || || Develop & Test|| <span style="color:green">Green</span> || <span style="color:green">Green</span> || Andy || User getting intermittent ping error page, needs log investigation and/or recent error report.  || 11/3/2015
+|-
+| Service Delivery Dashboard phase 2 || 41797 || || Develop & Test|| <span style="color:green">Green</span> || <span style="color:green">Green</span> || Andy || In FRD for SP Connection for external users to Salesforce.  Hold until next year.  || 11/3/2015
+|-
+| CoBrowse || 41421 || || Develop & Test|| <span style="color:green">Green</span> || <span style="color:green">Green</span> || Andy || Just in analysis.  || 11/3/2015
 |}

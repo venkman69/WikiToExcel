@@ -175,14 +175,14 @@ def tdToExcel(ws,wikicell,colCount, rowCount, trStyle, tblStyle):
 def wikiTblToExcel(wikiTblList):
     tblCount=0
     wb=Workbook()
-    for tblInd,tbl in zip(range(len(wikiTblList)),wikiTblList):
+    for tblInd,tbl in zip(range(len(wikiTblList)+1),wikiTblList):
         caption=tbl.caption
         if caption != None and caption != u"":
             shtName=captionToExcel(caption)
         else:
-            shtName = "Sheet"+str(tblInd)
+            shtName = "Sheet"+str(tblInd+1)
 
-        ws=wb.create_sheet(tblInd, shtName)
+        ws=wb.create_sheet(index=tblInd+1, title=shtName)
         # set the new sheet as active
         wb.active=wb.get_index(ws)
         tblStyle=procStyle(tbl)

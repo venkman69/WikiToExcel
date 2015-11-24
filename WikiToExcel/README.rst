@@ -50,6 +50,11 @@ If implementing this as a web.py call:
 			web.header('Content-type','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 			return sbuf.getvalue()
 
+Release Notes: 0.1.6
+--------------------
+
+Bug found and fixed for creating a worksheet.
+
 Release Notes: 0.1.5
 --------------------
 
