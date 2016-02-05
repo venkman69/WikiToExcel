@@ -3,7 +3,6 @@
 @author: venkman69
 '''
 from bs4 import BeautifulSoup
-import re
 
 
 class _tbl(object):
@@ -97,12 +96,6 @@ def wikiTableParser(wikiText):
     the cell contents themselves are raw contents of the wiki"""
     tblList=[]
     t=wikiText.split(u"\n")
-    td = [] # Is currently a td tag open?
-    ltd = [] # Was it TD or TH?
-    tr = [] # Is currently a tr tag open?
-    ltr = [] # tr attributes    
-    tbl = [] # is a table open
-    ltbl = [] # tbl attributes
     tblObj = None # current table object
     row=None
     cell=None
