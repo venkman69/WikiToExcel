@@ -151,6 +151,8 @@ def tdToExcel(ws,wikicell,colCount, rowCount, trStyle, tblStyle):
         cell=ws.cell(column=colCount+colMergeOffset+1,row=rowCount+1)
 
     cell.value=wikicell.text
+    if cell.value.strip() == "&nbsp;":
+        cell.value=""
     #replace <br/> with return characters
     cell.value=HTML_BR.sub("\n",cell.value)
     # if line contains multiple lines, then set the wrap style on
@@ -175,14 +177,14 @@ def tdToExcel(ws,wikicell,colCount, rowCount, trStyle, tblStyle):
 def wikiTblToExcel(wikiTblList):
     tblCount=0
     wb=Workbook()
-    for tblInd,tbl in zip(range(len(wikiTblList)),wikiTblList):
+    for tblInd,tbl in zip(range(len(wikiTblList)+1),wikiTblList):
         caption=tbl.caption
         if caption != None and caption != u"":
             shtName=captionToExcel(caption)
         else:
-            shtName = "Sheet"+str(tblInd)
+            shtName = "Sheet"+str(tblInd+1)
 
-        ws=wb.create_sheet(tblInd, shtName)
+        ws=wb.create_sheet(index=tblInd+1, title=shtName)
         # set the new sheet as active
         wb.active=wb.get_index(ws)
         tblStyle=procStyle(tbl)

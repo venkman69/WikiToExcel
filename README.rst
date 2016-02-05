@@ -49,6 +49,14 @@ If implementing this as a web.py call:
 			w2e.saveExcel(fileObj=sbuf)
 			web.header('Content-type','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 			return sbuf.getvalue()
+Release Notes: 0.1.7
+--------------------
+Minor update to handling empty cells or with &nbsp;. And some cleanup
+
+Release Notes: 0.1.6
+--------------------
+
+Bug found and fixed for creating a worksheet.
 
 Release Notes: 0.1.5
 --------------------
