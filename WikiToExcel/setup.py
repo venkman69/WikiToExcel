@@ -32,6 +32,7 @@ setup(name='wikitoexcel',
 	  py_modules=['version'],
       install_requires=[
           'openpyxl',
-          'beautifulsoup4'
+          'beautifulsoup4',
+          'webcolors'
       ],
       zip_safe=False)

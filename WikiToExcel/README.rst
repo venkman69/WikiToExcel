@@ -49,6 +49,13 @@ If implementing this as a web.py call:
 			w2e.saveExcel(fileObj=sbuf)
 			web.header('Content-type','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 			return sbuf.getvalue()
+
+Release Notes: 0.1.8
+--------------------
+A few more options:
+support for color names
+automatically create a row if no row exists
+
 Release Notes: 0.1.7
 --------------------
 Minor update to handling empty cells or with &nbsp;. And some cleanup

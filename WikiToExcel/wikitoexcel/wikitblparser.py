@@ -3,12 +3,16 @@
 @author: venkman69
 '''
 from bs4 import BeautifulSoup
+import sys
 
 
 class _tbl(object):
     attrs=None
     def __init__(self,attrs=None):
-        self.attrs = attrs
+        if attrs==None:
+            self.attrs = {}
+        else:
+            self.attrs = attrs
     def __repr__(self):
         return str(self.attrs)
 
@@ -77,6 +81,8 @@ def wikiAttrParse(wikiText,elementType):
         #separate this out
         sSplit=styleAttrs['style'].split(";")
         for k in sSplit:
+            if k==u"":
+                continue
             key,val = k.split(":")
             styleAttrs[key.strip()]=val.strip()
     return styleAttrs
@@ -134,7 +140,11 @@ def wikiTableParser(wikiText):
                 cs=wikiAttrParse(styleStr, "td")
                 #cell start
                 if cell!=None:
-                    row.addCell(cell)
+                    try:
+                        row.addCell(cell)
+                    except:
+                        row=tblObj.addRow()
+                        row.addCell(cell)
                 cell=wikiCell(txt,cs)
 
             continue

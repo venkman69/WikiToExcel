@@ -39,6 +39,7 @@ from openpyxl.utils import coordinate_from_string
 from __builtin__ import file
 import os
 from wikitoexcel.wikitblparser import wikiTableParser
+import webcolors
 
 HTML_BR=re.compile(r"<br[ ]*[/]>", re.IGNORECASE)
 
@@ -65,6 +66,7 @@ def procStyle(bsNode):
                 'italic',
                 'line-through',
                 'underline',
+                'background',
                 'background-color',
                 'width',
                 'color']
@@ -86,9 +88,10 @@ def procStyle(bsNode):
         if k == 'width':
             if v != "":
                 styleMap['width']=v
-        if k == "background-color" and v != False:
+        if k == "background-color" or k == "background" and v != False:
             styleMap['background-color']=v
-
+        if k == "align":
+            styleMap["align"]=v
     return styleMap
 
 def applyFmt(tblStyle, trStyle,tdStyle, cell,ws):
@@ -125,7 +128,15 @@ def applyFmt(tblStyle, trStyle,tdStyle, cell,ws):
                     w=float(w)*12
             ws.column_dimensions[c].width=w
         if k == "color" and v != False:
-            font.color = v[1:]
+            if v[1]=="#":
+                font.color = v[1:]
+            else:
+                try:
+                    hxcol=webcolors.name_to_hex(v)
+                    font.color=hxcol[1:]
+                except:
+                    pass
+
         if k == "background-color" and v != False:
             c=Color(v[1:])
             fill=PatternFill(patternType=fills.FILL_SOLID,fgColor=c)
@@ -158,8 +169,10 @@ def tdToExcel(ws,wikicell,colCount, rowCount, trStyle, tblStyle):
     # if line contains multiple lines, then set the wrap style on
     # this means return character exists between texts
     if re.search(r".+\n.+", wikicell.text):
-        cell.alignment = Alignment(wrapText=True)
+        cell.alignment = cell.alignment.copy(wrapText=True)
         print "Wrap:",cell.coordinate
+    if wikicell.attrs.has_key('align'):
+        cell.alignment=cell.alignment.copy(horizontal=wikicell.attrs['align'])
 
     if wikicell.attrs.has_key('colspan'):
         colspan+=int(wikicell.attrs['colspan']) -1
